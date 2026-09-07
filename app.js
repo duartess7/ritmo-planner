@@ -35,7 +35,7 @@ function render() {
   if (settings) return;
 
   renderCalendar();
-  const categoryTasks = state.tasks.filter(task => task.category === state.view && (!state.selectedDate || task.date === state.selectedDate));
+  const categoryTasks = state.tasks.filter(task => task.category === state.view && taskBelongsToView(task));
   const visible = categoryTasks.filter(task => {
     const statusMatch = state.status === 'all' || (state.status === 'done' ? task.done : !task.done);
     const haystack = `${task.title} ${task.notes || ''} ${(task.tags || []).join(' ')}`.toLowerCase();
@@ -163,6 +163,24 @@ function scheduleReminders() {
 function localDate(date = new Date()) {
   const offset = date.getTimezoneOffset() * 60000;
   return new Date(date.getTime() - offset).toISOString().slice(0, 10);
+}
+
+function taskBelongsToView(task) {
+  if (!task.date) return true;
+  if (state.selectedDate) return task.date === state.selectedDate;
+  const today = new Date();
+  const date = new Date(`${task.date}T12:00:00`);
+  if (state.view === 'day') return task.date === localDate(today);
+  if (state.view === 'week') {
+    const start = new Date(today);
+    start.setHours(12, 0, 0, 0);
+    start.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+    const end = new Date(start);
+    end.setDate(start.getDate() + 7);
+    return date >= start && date < end;
+  }
+  if (state.view === 'month') return date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth();
+  return true;
 }
 
 function formatShortDate(value) {

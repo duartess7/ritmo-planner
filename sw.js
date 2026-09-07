@@ -1,4 +1,4 @@
-const CACHE = 'ritmo-shell-v3';
+const CACHE = 'ritmo-shell-v4';
 const ASSETS = ['./', './index.html', './style.css', './app.js', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/splash-1290x2796.png'];
 
 self.addEventListener('install', event => {
