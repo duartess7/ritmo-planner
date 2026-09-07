@@ -274,7 +274,15 @@ function init() {
   $('#clearButton').addEventListener('click', () => { if (!confirm('Apagar todas as tarefas deste aparelho?')) return; state.tasks = []; saveTasks(); render(); showToast('Todas as tarefas foram apagadas'); });
   $('#focusStart').addEventListener('click', toggleFocus);
   $('#focusReset').addEventListener('click', () => { if (state.focusTimer) clearInterval(state.focusTimer); state.focusTimer = null; state.focusSeconds = 1500; renderFocus(); });
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => showToast('Modo offline não pôde ser ativado'));
+  if ('serviceWorker' in navigator) {
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshing) return;
+      refreshing = true;
+      location.reload();
+    });
+    navigator.serviceWorker.register('./sw.js?v=5').then(registration => registration.update()).catch(() => showToast('Modo offline não pôde ser ativado'));
+  }
   if (new URLSearchParams(location.search).get('action') === 'new') openEditor();
 }
 
