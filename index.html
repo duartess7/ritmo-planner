@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0f0f0f">
+  <meta name="description" content="Planner pessoal rápido, offline e feito para o iPhone.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ritmo">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="apple-touch-startup-image" href="icons/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <title>Ritmo Planner</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="date-label" id="dateLabel"></p>
+        <h1 id="viewTitle">Hoje</h1>
+      </div>
+      <button class="icon-button" id="themeButton" type="button" aria-label="Alternar tema">
+        <span aria-hidden="true">◐</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="progress-panel" aria-labelledby="progressTitle">
+        <div class="progress-copy">
+          <span id="progressTitle">Seu ritmo</span>
+          <strong id="progressText">0 de 0 tarefas</strong>
+          <p id="progressHint">Comece pequeno. Escolha uma tarefa.</p>
+        </div>
+        <div class="progress-ring" id="progressRing" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span id="progressPercent">0%</span>
+        </div>
+      </section>
+
+      <section class="toolbar" aria-label="Filtros">
+        <div class="segmented" id="statusFilters">
+          <button class="active" data-status="all" type="button">Todas</button>
+          <button data-status="pending" type="button">Pendentes</button>
+          <button data-status="done" type="button">Concluídas</button>
+        </div>
+      </section>
+
+      <section class="task-section" aria-labelledby="taskHeading">
+        <div class="section-heading">
+          <h2 id="taskHeading">Prioridades</h2>
+          <span id="taskCount">0</span>
+        </div>
+        <div class="task-list" id="taskList" aria-live="polite"></div>
+        <div class="empty-state" id="emptyState" hidden>
+          <div class="empty-mark" aria-hidden="true">✓</div>
+          <h2>Nada por aqui</h2>
+          <p>Adicione uma tarefa ou aproveite o tempo livre.</p>
+          <button class="text-button" type="button" data-open-editor>Nova tarefa</button>
+        </div>
+      </section>
+    </main>
+
+    <button class="add-button" type="button" data-open-editor aria-label="Criar tarefa"><span>+</span></button>
+
+    <nav class="bottom-nav" aria-label="Períodos do planner">
+      <button class="active" data-view="day" type="button"><span class="nav-icon">●</span><span>Hoje</span></button>
+      <button data-view="week" type="button"><span class="nav-icon">▥</span><span>Semana</span></button>
+      <button data-view="month" type="button"><span class="nav-icon">▦</span><span>Mês</span></button>
+      <button data-view="settings" type="button"><span class="nav-icon">⚙</span><span>Ajustes</span></button>
+    </nav>
+  </div>
+
+  <div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+  <section class="task-sheet" id="taskSheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <div class="sheet-header">
+      <button class="text-button muted" id="cancelEditor" type="button">Cancelar</button>
+      <h2 id="sheetTitle">Nova tarefa</h2>
+      <button class="text-button" id="saveTask" type="button">Salvar</button>
+    </div>
+    <form id="taskForm">
+      <input id="taskId" type="hidden">
+      <label class="field title-field">O que precisa acontecer?
+        <input id="taskTitle" maxlength="90" autocomplete="off" required placeholder="Escreva uma tarefa">
+      </label>
+      <div class="form-row">
+        <label class="field">Período
+          <select id="taskCategory">
+            <option value="day">Hoje</option>
+            <option value="week">Esta semana</option>
+            <option value="month">Este mês</option>
+          </select>
+        </label>
+        <label class="field">Horário
+          <input id="taskTime" type="time">
+        </label>
+      </div>
+      <label class="toggle-row">
+        <span><strong>Lembrete</strong><small>Avise no horário escolhido</small></span>
+        <input id="taskReminder" type="checkbox" role="switch">
+      </label>
+      <button class="delete-editor" id="deleteEditor" type="button" hidden>Excluir tarefa</button>
+    </form>
+  </section>
+
+  <section class="settings-view" id="settingsView" hidden>
+    <div class="settings-card">
+      <h2>Preferências</h2>
+      <label class="toggle-row">
+        <span><strong>Tema claro</strong><small>Alterna a aparência do app</small></span>
+        <input id="themeToggle" type="checkbox" role="switch">
+      </label>
+      <button class="settings-action" id="notificationButton" type="button"><span>Notificações</span><strong id="notificationStatus">Configurar</strong></button>
+      <button class="settings-action danger" id="clearButton" type="button"><span>Apagar todas as tarefas</span><strong>Limpar</strong></button>
+    </div>
+    <p class="settings-note">Seus dados ficam somente neste aparelho e continuam disponíveis sem internet.</p>
+  </section>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>
