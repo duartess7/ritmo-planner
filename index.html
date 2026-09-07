@@ -27,6 +27,12 @@
     </header>
 
     <main>
+      <form class="quick-capture" id="quickForm">
+        <button type="submit" aria-label="Adicionar tarefa">+</button>
+        <input id="quickInput" maxlength="90" autocomplete="off" placeholder="Adicionar tarefa rapidamente">
+        <button class="capture-detail" type="button" data-open-editor aria-label="Abrir detalhes">•••</button>
+      </form>
+
       <section class="progress-panel" aria-labelledby="progressTitle">
         <div class="progress-copy">
           <span id="progressTitle">Seu ritmo</span>
@@ -44,7 +50,11 @@
           <button data-status="pending" type="button">Pendentes</button>
           <button data-status="done" type="button">Concluídas</button>
         </div>
+        <button class="search-toggle" id="searchToggle" type="button" aria-label="Pesquisar tarefas">⌕</button>
       </section>
+      <div class="search-panel" id="searchPanel" hidden><input id="searchInput" type="search" placeholder="Pesquisar tarefas, notas ou etiquetas"></div>
+
+      <section class="calendar-strip" id="calendarStrip" aria-label="Calendário"></section>
 
       <section class="task-section" aria-labelledby="taskHeading">
         <div class="section-heading">
@@ -96,6 +106,35 @@
           <input id="taskTime" type="time">
         </label>
       </div>
+      <div class="form-row">
+        <label class="field">Data
+          <input id="taskDate" type="date">
+        </label>
+        <label class="field">Prioridade
+          <select id="taskPriority">
+            <option value="none">Sem prioridade</option>
+            <option value="high">Alta</option>
+            <option value="medium">Média</option>
+            <option value="low">Baixa</option>
+          </select>
+        </label>
+      </div>
+      <label class="field field-spaced">Notas
+        <textarea id="taskNotes" maxlength="500" placeholder="Detalhes, links ou contexto"></textarea>
+      </label>
+      <div class="form-row">
+        <label class="field">Etiquetas
+          <input id="taskTags" maxlength="80" placeholder="trabalho, pessoal">
+        </label>
+        <label class="field">Repetir
+          <select id="taskRepeat">
+            <option value="none">Não repetir</option>
+            <option value="daily">Todo dia</option>
+            <option value="weekly">Toda semana</option>
+            <option value="monthly">Todo mês</option>
+          </select>
+        </label>
+      </div>
       <label class="toggle-row">
         <span><strong>Lembrete</strong><small>Avise no horário escolhido</small></span>
         <input id="taskReminder" type="checkbox" role="switch">
@@ -113,6 +152,10 @@
       </label>
       <button class="settings-action" id="notificationButton" type="button"><span>Notificações</span><strong id="notificationStatus">Configurar</strong></button>
       <button class="settings-action danger" id="clearButton" type="button"><span>Apagar todas as tarefas</span><strong>Limpar</strong></button>
+    </div>
+    <div class="focus-card">
+      <div><span>Foco</span><strong id="focusClock">25:00</strong><p>Uma tarefa por vez. O resto pode esperar.</p></div>
+      <div class="focus-actions"><button id="focusStart" type="button">Iniciar</button><button id="focusReset" type="button">Reiniciar</button></div>
     </div>
     <p class="settings-note">Seus dados ficam somente neste aparelho e continuam disponíveis sem internet.</p>
   </section>
