@@ -100,6 +100,7 @@ h1 { margin: 0; font-size: clamp(34px, 9vw, 48px); line-height: .95; letter-spac
 .edit-button { width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: 20px; }
 .edit-button:active { background: var(--surface-raised); }
 .task-card.removing { animation: task-out .25s ease forwards; }
+.task-card.completing { pointer-events: none; animation: task-complete .36s cubic-bezier(.4,0,.2,1) forwards; }
 
 .empty-state { padding: 58px 30px; text-align: center; }
 .empty-mark { display: grid; width: 58px; height: 58px; margin: 0 auto 18px; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--accent); font-size: 22px; }
@@ -158,6 +159,7 @@ input[role="switch"]:checked::before { transform: translateX(20px); }
 
 @keyframes task-in { from { transform: translateY(8px); opacity: 0; } }
 @keyframes task-out { to { transform: translateX(-35px); opacity: 0; } }
+@keyframes task-complete { 45% { transform: scale(.985); opacity: .72; } 100% { transform: translateX(28px); opacity: 0; } }
 @keyframes sheet-in { from { transform: translateY(100%); } }
 @media (min-width: 760px) { .app-shell { padding-inline: 34px; } .task-sheet { bottom: 18px; border-bottom: 1px solid var(--line); border-radius: 28px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }

@@ -1,6 +1,6 @@
 const STORAGE_KEY = 'ritmo.tasks.v1';
 const THEME_KEY = 'ritmo.theme';
-const state = { view: 'day', status: 'all', query: '', selectedDate: '', tasks: loadTasks(), reminderTimers: new Map(), focusSeconds: 1500, focusTimer: null };
+const state = { view: 'day', status: 'pending', query: '', selectedDate: '', tasks: loadTasks(), reminderTimers: new Map(), focusSeconds: 1500, focusTimer: null };
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -86,7 +86,14 @@ function toggleTask(id) {
   task.done = !task.done;
   task.completedAt = task.done ? Date.now() : null;
   if (task.done && task.repeat && task.repeat !== 'none') createNextOccurrence(task);
-  saveTasks(); render();
+  saveTasks();
+  const card = document.querySelector(`[data-id="${id}"]`);
+  const leavesCurrentFilter = (state.status === 'pending' && task.done) || (state.status === 'done' && !task.done);
+  if (card) card.classList.toggle('done', task.done);
+  if (card && leavesCurrentFilter) {
+    card.classList.add('completing');
+    setTimeout(render, 360);
+  } else render();
   if (navigator.vibrate) navigator.vibrate(18);
 }
 
@@ -234,7 +241,7 @@ function init() {
   updateNotificationStatus(); scheduleReminders(); render();
   renderFocus();
   $$('[data-open-editor]').forEach(button => button.addEventListener('click', () => openEditor()));
-  $('.bottom-nav').addEventListener('click', event => { const button = event.target.closest('[data-view]'); if (!button) return; state.view = button.dataset.view; render(); });
+  $('.bottom-nav').addEventListener('click', event => { const button = event.target.closest('[data-view]'); if (!button) return; state.view = button.dataset.view; state.selectedDate = ''; render(); });
   $('#statusFilters').addEventListener('click', event => { const button = event.target.closest('[data-status]'); if (!button) return; state.status = button.dataset.status; $$('#statusFilters button').forEach(item => item.classList.toggle('active', item === button)); render(); });
   $('#quickForm').addEventListener('submit', event => { event.preventDefault(); const title = $('#quickInput').value.trim(); if (!title) return; state.tasks.unshift({ id: crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`, title, category: state.view === 'settings' ? 'day' : state.view, date: localDate(), time: '', priority: 'none', notes: '', tags: [], repeat: 'none', reminder: false, done: false, createdAt: Date.now(), completedAt: null }); $('#quickInput').value = ''; saveTasks(); render(); showToast('Tarefa adicionada'); });
   $('#searchToggle').addEventListener('click', () => { $('#searchPanel').hidden = !$('#searchPanel').hidden; if (!$('#searchPanel').hidden) $('#searchInput').focus(); });
